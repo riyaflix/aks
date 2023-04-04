@@ -1,0 +1,21 @@
+on: 
+  workflow_dispatch:
+  
+env:
+  KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+
+name: AzureLoginSample
+
+jobs:
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.KUBE_CONFIG }}
+    
+    - run: |
+        export $KUBE_CONFIG
+        k get po -A
