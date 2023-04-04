@@ -13,5 +13,4 @@ jobs:
     steps:
    
     - run: |
-        export $KUBE_CONFIG
         kubectl get po -A
