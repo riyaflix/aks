@@ -9,13 +9,23 @@ name: AzureLoginSample
 jobs:
 
   build-and-deploy:
+    env:
+      AKS_CLUSTER: go1percent-aks-dev
+      AKS_RESOURCE_GROUP: Go1PercentPlatform
     runs-on: ubuntu-latest
     steps:
-      - name: Log in with Azure
-        uses: azure/login@v1
-        with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
-      - name: kubectl
-        run: |
-          az aks get-credentials --resource-group Go1PercentPlatform --name go1percent-aks-dev
-          kubectl get po
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Set context 
+      uses: azure/aks-set-context@v3
+      with:
+        resource-group: ${{ env.AKS_RESOURCE_GROUP }}
+        cluster-name: ${{ env.AKS_CLUSTER }}
+
+    - name: kubectl
+      run: |
+        az aks get-credentials --resource-group Go1PercentPlatform --name go1percent-aks-dev
+        kubectl get po
